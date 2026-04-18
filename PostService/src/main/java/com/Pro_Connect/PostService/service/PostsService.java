@@ -16,7 +16,7 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 @Slf4j
-public class postsService {
+public class PostsService {
     private final PostRepository postRepository;
     private final ModelMapper modelMapper;
     public PostDTO createPost(PostCreateRequestDto postCreateRequestDto,Long userId) {

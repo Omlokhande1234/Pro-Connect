@@ -2,7 +2,7 @@ package com.Pro_Connect.PostService.controller;
 
 import com.Pro_Connect.PostService.dto.PostCreateRequestDto;
 import com.Pro_Connect.PostService.dto.PostDTO;
-import com.Pro_Connect.PostService.service.postsService;
+import com.Pro_Connect.PostService.service.PostsService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +14,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/core")
 public class PostController {
-    private  final postsService postsService;
+    private  final PostsService postsService;
     @PostMapping
     public ResponseEntity<PostDTO> createPost(@RequestBody PostCreateRequestDto postCreateRequestDto,Long userId) {
         //for now we have hardcoded the user as 1
