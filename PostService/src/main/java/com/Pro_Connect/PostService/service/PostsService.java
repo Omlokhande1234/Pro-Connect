@@ -1,5 +1,8 @@
 package com.Pro_Connect.PostService.service;
 
+import com.Pro_Connect.PostService.auth.AuthContextHolder;
+import com.Pro_Connect.PostService.client.ConnectionServerClient;
+import com.Pro_Connect.PostService.dto.PersonDto;
 import com.Pro_Connect.PostService.dto.PostCreateRequestDto;
 import com.Pro_Connect.PostService.dto.PostDTO;
 import com.Pro_Connect.PostService.entity.Post;
@@ -19,6 +22,7 @@ import java.util.stream.Collectors;
 public class PostsService {
     private final PostRepository postRepository;
     private final ModelMapper modelMapper;
+    private final ConnectionServerClient connectionServerClient;
     public PostDTO createPost(PostCreateRequestDto postCreateRequestDto,Long userId) {
            Post post = modelMapper.map(postCreateRequestDto, Post.class);
            post.setUserId(userId);
@@ -28,6 +32,10 @@ public class PostsService {
 
     public PostDTO getPostById(Long postId) {
         log.info("Getting post by id {}", postId);
+        Long userId = AuthContextHolder.getCurrentUserId();
+//        TODO REMOVE IN FUTURE
+//        call the connections service from the posts service and pass the userId inside the headers
+        List<PersonDto> personDtoList=connectionServerClient.getFirstDegreeConnections(userId);
         Post post = postRepository.findById(postId).orElseThrow(()->new ResourceNotFoundException("Post not found with id " + postId));
         return modelMapper.map(post, PostDTO.class);
     }
