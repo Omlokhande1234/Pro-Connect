@@ -1,7 +1,9 @@
 package com.Pro_Connect.PostService.service;
 
+import com.Pro_Connect.PostService.auth.AuthContextHolder;
 import com.Pro_Connect.PostService.entity.Post;
 import com.Pro_Connect.PostService.entity.PostLike;
+import com.Pro_Connect.PostService.event.PostLiked;
 import com.Pro_Connect.PostService.exception.BadRequestException;
 import com.Pro_Connect.PostService.exception.ResourceNotFoundException;
 import com.Pro_Connect.PostService.repository.PostLikeRepository;
@@ -9,6 +11,7 @@ import com.Pro_Connect.PostService.repository.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,10 +22,11 @@ public class PostLikeService {
      private final PostLikeRepository postLikeRepository;
      private final ModelMapper modelMapper;
      private final PostRepository postRepository;
+     private final KafkaTemplate<Long, PostLiked> postLikeKafkaTemplate;
 
      @Transactional
      public void likePost(Long postId) {
-         Long userId=1L;
+         Long userId= AuthContextHolder.getCurrentUserId();
          log.info("User with ID:{} liking the post with ID:{} ",userId,postId);
          Post post=postRepository.findById(postId).orElseThrow(()->new ResourceNotFoundException("Post with ID:"+postId+" not found"));
          boolean hasAlreadyLiked=postLikeRepository.existsByUserIdAndPostId(userId,postId);
@@ -35,10 +39,20 @@ public class PostLikeService {
          postLikeRepository.save(postLike);
 
 //         TODO:send notification to the owner of the post
+         PostLiked postLiked=PostLiked.builder()
+                 .postId(postId)
+                 .likedByUserId(userId)
+                 .ownerUserId(post.getUserId())
+                 .build();
+         postLikeKafkaTemplate.send(
+                 "postLiked",
+                 post.getId()
+                 ,postLiked
+         );
      }
      @Transactional
      public void unlikePost(Long postId) {
-         Long userId=1L;
+         Long userId=AuthContextHolder.getCurrentUserId();
          log.info("User with ID:{} unliking the post with ID:{}",userId,postId);
          postLikeRepository.findById(postId).orElseThrow(()->new ResourceNotFoundException("Post with ID:"+postId+" not found"));
          boolean hasAlreadyLiked=postLikeRepository.existsByUserIdAndPostId(userId,postId);

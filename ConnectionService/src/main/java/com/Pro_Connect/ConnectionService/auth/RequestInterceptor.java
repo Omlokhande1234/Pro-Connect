@@ -1,9 +1,7 @@
 package com.Pro_Connect.ConnectionService.auth;
-
-import com.Pro_Connect.PostService.auth.AuthContextHolder;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.jspecify.annotations.Nullable;
+import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
@@ -13,6 +11,8 @@ public class RequestInterceptor implements HandlerInterceptor {
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         String userId = request.getHeader("X-User-Id");
+        System.out.println("========== INTERCEPTOR ==========");
+        System.out.println("X-User-Id = " + userId);
         AuthContextHolder.setCurrentUserId(Long.valueOf(userId));
         return HandlerInterceptor.super.preHandle(request, response, handler);
     }

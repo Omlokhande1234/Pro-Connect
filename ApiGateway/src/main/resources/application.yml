@@ -23,7 +23,7 @@ spring:
         - id: connection-service
           uri: lb://CONNECTION-SERVICE
           predicates:
-            - Path=/api/v1/users/**
+            - Path=/api/v1/connection/**
           filters:
             - StripPrefix=2
             - name: AuthenticationFilter
@@ -35,6 +35,8 @@ eureka:
     service-url:
       defaultZone: ${EUREKA_CLIENT_SERVICE_URL_DEFAULTZONES}
     register-with-eureka: true
-
+  instance:
+    prefer-ip-address: true
+    ip-address: 127.0.0.1
 jwt:
   secretKey: ${JWT_SECRET_KEY}

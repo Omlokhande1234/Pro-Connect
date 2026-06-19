@@ -1,7 +1,5 @@
 package com.Pro_Connect.userService.exception;
 
-import com.Pro_Connect.userService.exception.ApiError;
-import com.Pro_Connect.userService.exception.ResourceNotFoundException;
 import org.apache.coyote.BadRequestException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

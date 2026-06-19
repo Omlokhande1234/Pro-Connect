@@ -1,6 +1,5 @@
 package com.Pro_Connect.PostService.controller;
 
-import com.Pro_Connect.PostService.auth.AuthContextHolder;
 import com.Pro_Connect.PostService.dto.PostCreateRequestDto;
 import com.Pro_Connect.PostService.dto.PostDTO;
 import com.Pro_Connect.PostService.service.PostsService;
@@ -18,7 +17,6 @@ public class PostController {
     private  final PostsService postsService;
     @PostMapping
     public ResponseEntity<PostDTO> createPost(@RequestBody PostCreateRequestDto postCreateRequestDto,Long userId) {
-        //for now we have hardcoded the user as 1
         PostDTO postDTO = postsService.createPost(postCreateRequestDto,1L);
         return new  ResponseEntity<>(postDTO, HttpStatus.OK);
 

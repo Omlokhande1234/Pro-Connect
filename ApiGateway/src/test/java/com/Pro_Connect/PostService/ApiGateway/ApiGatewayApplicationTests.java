@@ -1,4 +1,4 @@
-package com.Pro_Connect.ApiGateway;
+package com.Pro_Connect.PostService.ApiGateway;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;
